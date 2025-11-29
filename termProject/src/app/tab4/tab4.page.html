@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Classrooms</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+<!-- List to display classrooms -->
+
+<div>
+<ion-button (click)="addClassroom()">Add Classroom</ion-button>
+</div>
+<div>
+
+
+  <ion-list>
+        <ion-list-header>
+    @for (col of displayedColumns; track col)
+    {
+
+      <ion-label>{{col}}</ion-label>
+    
+  }
+  </ion-list-header>
+    @for (classroom of classrooms; track classroom; let index = $index) {
+    <ion-item-sliding>
+      <ion-item>
+      <ion-label>{{classroom.classroomId}}</ion-label>
+      <ion-label>{{classroom.name}}</ion-label>
+      <ion-label>{{classroom.capacity}}</ion-label>
+      </ion-item>
+
+      <ion-item-options>
+        <ion-button color="secondary">Edit</ion-button>
+        <ion-button color="danger">Delete</ion-button>
+      </ion-item-options>
+    </ion-item-sliding>
+    }
+  </ion-list>
+
+</div>
+
+</ion-content>
