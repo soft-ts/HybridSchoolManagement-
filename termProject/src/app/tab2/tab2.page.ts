@@ -15,7 +15,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonInput, IonButt
 } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   standalone:true,
