@@ -6,11 +6,10 @@
 
 <ion-content [fullscreen]="true">
 
-  <!-- Button to open modal -->
+  <!-- Add/Edit Modal Button -->
   <div class="ion-padding">
     <ion-button id="course-modal">Add Course</ion-button>
 
-    <!-- Modal for Add/Edit Course -->
     <ion-modal trigger="course-modal" (willDismiss)="onWillDismiss($event)" class="rounded-modal">
       <ng-template>
         <ion-header>
@@ -66,7 +65,7 @@
           <ion-label>{{ c.credits }}</ion-label>
         </ion-item>
         <ion-item-options side="end">
-          <ion-button color="secondary" (click)="editCourse(c)">Edit</ion-button>
+          <ion-button color="secondary" (click)="fetchCourse(c.courseId)">Edit</ion-button>
           <ion-button color="danger" (click)="deleteCourse(c.courseId)">Delete</ion-button>
         </ion-item-options>
       </ion-item-sliding>
