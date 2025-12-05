@@ -1,17 +1,119 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title size="large">Student Management</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Add New Student</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="stacked">ID</ion-label>
+              <ion-input type="number" placeholder="Enter student ID" [(ngModel)]="newStudent.id"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="stacked">Last Name</ion-label>
+              <ion-input placeholder="Enter last name" [(ngModel)]="newStudent.lastName"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="stacked">First Name</ion-label>
+              <ion-input placeholder="Enter first name" [(ngModel)]="newStudent.firstName"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="stacked">Course</ion-label>
+              <ion-input placeholder="Enter course" [(ngModel)]="newStudent.course"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-item>
+              <ion-label position="stacked">GPA</ion-label>
+              <ion-input type="number" step="0.01" min="0" max="4" placeholder="Enter GPA" [(ngModel)]="newStudent.gpa"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row>
+          <ion-col size="12">
+            <ion-button expand="block" color="primary" (click)="addRecord()">
+              Add Student
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6">
+            <ion-button expand="block" color="secondary" (click)="showRecords()">
+              Load/Refresh Students
+            </ion-button>
+          </ion-col>
+          <ion-col size="12" size-md="6">
+            <ion-button expand="block" color="medium" (click)="clearForm()">
+              Clear Form
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Student Records</ion-card-title>
+      <ion-card-subtitle>Total Students: {{ students.length }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let student of students" class="student-item">
+          <ion-label>
+            <h2>{{ student.firstName }} {{ student.lastName }}</h2>
+            <p><strong>ID:</strong> {{ student.id }}</p>
+            <p><strong>Course:</strong> {{ student.course }}</p>
+            <p><strong>GPA:</strong> {{ student.gpa }}</p>
+          </ion-label>
+          <div slot="end">
+            <ion-button fill="clear" color="warning" (click)="editRecord(student)">
+              Edit
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="deleteRecord(student.id)">
+              Delete
+            </ion-button>
+          </div>
+        </ion-item>
+        
+        <ion-item *ngIf="students.length === 0">
+          <ion-label class="ion-text-center">
+            <h3>No students found</h3>
+            <p>Click "Load/Refresh Students" to load records</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
