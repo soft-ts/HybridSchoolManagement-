@@ -19,59 +19,6 @@ app.listen(3000, () => {
 })
 
 // Courses CRUD
-// GET all courses
-app.get("/showCourses", (req, res) => {
-    dbase.collection("courses")
-        .find({})
-        .toArray((err, data) => {
-            if (err) res.json({ error: err });
-            else res.json(data);
-        });
-});
-
-// CREATE new course
-app.post("/addCourse", multer().none(), (req, res) => {
-    dbase.collection("courses").insertOne({
-        courseId: req.body.courseId,
-        courseName: req.body.courseName,
-        description: req.body.description,
-        credits: req.body.credits,
-        instructor: req.body.instructor
-    }, (err, result) => {
-        if (err) res.json({ error: err });
-        else res.json("Course added successfully!");
-    });
-});
-
-// UPDATE course
-app.put("/updateCourse", multer().none(), (req, res) => {
-    dbase.collection("courses").updateOne(
-        { courseId: req.body.courseId },
-        {
-            $set: {
-                courseName: req.body.courseName,
-                description: req.body.description,
-                credits: req.body.credits,
-                instructor: req.body.instructor
-            }
-        },
-        (err, result) => {
-            if (err) res.json({ error: err });
-            else res.json("Course updated successfully!");
-        }
-    );
-});
-
-// DELETE course
-app.delete("/deleteCourse", (req, res) => {
-    dbase.collection("courses").deleteOne(
-        { courseId: req.query.courseId },
-        (err, result) => {
-            if (err) res.json({ error: err });
-            else res.json("Course deleted successfully!");
-        }
-    );
-});
 
 // Students CRUD
 app.get("/showRecords", (req, res) => {
