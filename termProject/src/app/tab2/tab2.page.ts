@@ -2,115 +2,106 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonInput, IonButton, IonList, IonLabel,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonCardSubtitle,
-  IonGrid,
-  IonRow,
-  IonCol
-  
-} from '@ionic/angular/standalone';
+import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  standalone:true,
- imports: [
-    CommonModule,
-    FormsModule,
-    IonContent,
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    IonItem, 
-    IonInput, 
-    IonButton, 
-    IonList, 
-    IonLabel,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonCardSubtitle,
-    IonGrid,
-    IonRow,
-    IonCol
-  
-  ]
+
+
 
 
 })
-export class Tab2Page {
+export class HomePage implements OnInit {
+  @ViewChild(IonModal) modal!: IonModal;
 
-  students: any[] = [];
-  apiURL = "http://localhost:3000/";
+  students: any;
+  selectedStudent: any = null;
+  isEditMode = false;
 
-  
-  newStudent = {
-    id: '',
-    lastName: '',
-    firstName: '',
-    course: '',
-    gpa: ''
-  };
+  apiURL = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
-  showRecords() {
-    this.http.get(this.apiURL + "showRecords").subscribe((data: any) => {
+  displayedColumns: string[] = [
+    'ID',
+    'Last Name',
+    'First Name',
+    'Course',
+    'GPA'
+  ];
+
+  showStudents() {
+    this.http.get(this.apiURL + '/showStudents').subscribe((data) => {
       this.students = data;
     });
   }
 
-  addRecord() {
-    const body = {
-      id: Number(this.newStudent.id),
-      lastName: this.newStudent.lastName,
-      firstName: this.newStudent.firstName,
-      course: this.newStudent.course,
-      gpa: Number(this.newStudent.gpa)
-    };
-
-    this.http.post(this.apiURL + "addRecord", body)
-      .subscribe(res => {
-        alert(res);
-        this.showRecords();
-        
-        this.newStudent = { id: '', lastName: '', firstName: '', course: '', gpa: '' };
-      });
+  cancel() {
+    this.modal.dismiss(null, 'cancel');
   }
 
-  deleteRecord(id: number) {
-    this.http.post(this.apiURL + "deleteRecord", { id })
-      .subscribe(res => {
-        alert(res);
-        this.showRecords();
-      });
-  }
+  confirm() {
+    const fields = ['id', 'lastName', 'firstName', 'course', 'gpa'];
+    const formdata = new FormData();
 
-  editRecord(student: any) {
-    const updated = {
-      lastName: prompt("Enter new last name:", student.lastName),
-      firstName: prompt("Enter new first name:", student.firstName),
-      course: prompt("Enter new course:", student.course),
-      gpa: Number(prompt("Enter new GPA:", student.gpa))
-    };
-
-    if (!updated.lastName || !updated.firstName || !updated.course || !updated.gpa) return;
-
-    this.http.post(this.apiURL + "updateRecord", {
-      id: student.id,
-      ...updated
-    }).subscribe(res => {
-      alert(res);
-      this.showRecords();
+    fields.forEach((field) => {
+      const value = (document.getElementById(field) as HTMLInputElement)?.value ?? '';
+      formdata.append(field, value);
     });
+
+    if (this.isEditMode) {
+      this.http.put(this.apiURL + '/updateStudents', formdata).subscribe((data) => {
+        alert(data);
+        this.showStudents();
+      });
+    } else {
+      this.http.post(this.apiURL + '/addStudents', formdata).subscribe((data) => {
+        alert(data);
+        this.showStudents();
+      });
+    }
+
+    this.modal.dismiss(null, 'confirm');
   }
-   clearForm() {
-    this.newStudent = { id: '', lastName: '', firstName: '', course: '', gpa: '' };
+
+  fetchStudent(id: any) {
+    this.isEditMode = true;
+
+    this.http
+      .get(this.apiURL + '/getStudent/?id=' + id)
+      .subscribe((data: any) => {
+        this.selectedStudent = data;
+
+        (document.getElementById('id') as HTMLInputElement).value = data.id;
+        (document.getElementById('lastName') as HTMLInputElement).value = data.lastName;
+        (document.getElementById('firstName') as HTMLInputElement).value = data.firstName;
+        (document.getElementById('course') as HTMLInputElement).value = data.course;
+        (document.getElementById('gpa') as HTMLInputElement).value = data.gpa;
+
+        (document.getElementById('id') as HTMLInputElement).disabled = true;
+      });
+
+    this.modal.present();
+  }
+
+  deleteStudent(id: any) {
+    this.http
+      .delete(this.apiURL + '/deleteStudents/?id=' + id)
+      .subscribe(() => {
+        this.showStudents();
+      });
+  }
+
+  onWillDismiss(event: CustomEvent<OverlayEventDetail>) {
+    this.isEditMode = false;
+    (document.getElementById('id') as HTMLInputElement).disabled = false;
+    this.selectedStudent = null;
+    this.showStudents();
+  }
+
+  ngOnInit() {
+    this.showStudents();
   }
 }
