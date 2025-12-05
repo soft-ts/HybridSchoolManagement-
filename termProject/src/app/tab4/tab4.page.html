@@ -7,37 +7,106 @@
 <ion-content [fullscreen]="true">
 <!-- List to display classrooms -->
 
-<div>
-<ion-button (click)="addClassroom()">Add Classroom</ion-button>
+<div class="ion-padding">
+  <ion-button id="classroom-modal">Add Classroom</ion-button>
+  <ion-modal trigger="classroom-modal" (willDismiss)="onWillDismiss($event)" class="rounded-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()" fill="clear" color="danger">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>{{ isEditMode ? 'Edit Classroom' : 'New Classroom' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" strong="true">
+              {{ isEditMode ? 'Save Changes' : 'Confirm' }}
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-input id="classroomId" label="Classroom ID" labelPlacement="stacked" placeholder="Class ID" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input id="name" label="Name" labelPlacement="stacked" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input id="capacity" type="number" label="Capacity" labelPlacement="stacked"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-select id="campus" label="Campus" label-placement="stacked">
+            <ion-select-option value="Trafalgar">Trafalgar</ion-select-option>
+            <ion-select-option value="Davis">Davis</ion-select-option>
+            <ion-select-option value="Hazel">Hazel</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-input id="building" type="text" label="Building" labelPlacement="stacked"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input id="floor" type="number" label="Floor" labelPlacement="stacked"></ion-input>
+        </ion-item>
+        <!-- <ion-item>
+          <ion-select id="resources" multiple="true" placeholder="Select all resources">
+            <ion-select-option value="Projector">Projector</ion-select-option>
+            <ion-select-option value="Lab-equipment">Lab Equipment</ion-select-option>
+            <ion-select-option value="Whiteboard">Whiteboard</ion-select-option>
+          </ion-select>
+        </ion-item> -->
+        <ion-item>
+          <ion-label>Room Availability</ion-label>
+          <ion-toggle id="availability" color="primary"></ion-toggle>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </div>
-<div>
 
-
+<div class="ion-padding">
   <ion-list>
-        <ion-list-header>
-    @for (col of displayedColumns; track col)
-    {
-
+    <ion-list-header>
+      @for (col of displayedColumns; track col)
+      {
       <ion-label>{{col}}</ion-label>
-    
-  }
-  </ion-list-header>
+      }
+    </ion-list-header>
     @for (classroom of classrooms; track classroom; let index = $index) {
     <ion-item-sliding>
       <ion-item>
-      <ion-label>{{classroom.classroomId}}</ion-label>
-      <ion-label>{{classroom.name}}</ion-label>
-      <ion-label>{{classroom.capacity}}</ion-label>
-      </ion-item>
+        <ion-label>{{classroom.classroomId}}</ion-label>
+        <ion-label>{{classroom.name}}</ion-label>
+        <ion-label>{{classroom.capacity}}</ion-label>
+        <ion-label>{{classroom.campus}}</ion-label>
+        <ion-label>{{classroom.building}}</ion-label>
+        <ion-label>{{classroom.floor}}</ion-label>
+        <!-- <ion-label>{{classroom.resources}}</ion-label> -->
 
+
+        <!-- <ion-label>
+          @if (classroom.resources)
+          {
+            <ion-select interface="popover" [placeholder]="classroom.resources.lenght">
+              @for(r of classroom.resources; track r;)
+              {
+                <ion-select-option [ariaReadOnly]="true">{{r}}</ion-select-option>
+              }
+          </ion-select>
+          }@else{
+            None 
+          }
+
+        </ion-label> -->
+
+        <ion-label>{{ classroom.availability == "false" ? 'No' : 'Yes' }}</ion-label>
+      </ion-item>
       <ion-item-options>
-        <ion-button color="secondary">Edit</ion-button>
-        <ion-button color="danger">Delete</ion-button>
+        <ion-button color="secondary" (click)="fetchClassroom(classroom.classroomId, classroom.campus)">Edit</ion-button>
+        <ion-button color="danger" (click)="deleteClassroom(classroom.classroomId, classroom.campus)">Delete</ion-button>
       </ion-item-options>
     </ion-item-sliding>
     }
   </ion-list>
-
 </div>
 
 </ion-content>

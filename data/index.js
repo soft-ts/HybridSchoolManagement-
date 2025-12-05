@@ -1,20 +1,18 @@
 // To run server use nodemon index.js
 
-const express=require('express');
-const mongodb=require('mongodb').MongoClient;
-const cors=require('cors');
-const multer=require('multer');
+const express = require('express');
+const mongodb = require('mongodb').MongoClient;
+const cors = require('cors');
+const multer = require('multer');
 
 const STRING = "mongodb://localhost:27017/";
 const db = "termProject";
 var dbase;
-const app=express();
+const app = express();
 app.use(cors());
 
-app.listen(3000, ()=>
-{
-    mongodb.connect(STRING, (err, client)=>
-    {
+app.listen(3000, () => {
+    mongodb.connect(STRING, (err, client) => {
         dbase = client.db(db);
         console.log("Database connection has been established!");
     })
@@ -28,7 +26,7 @@ app.listen(3000, ()=>
 
 // Classrooms CRUD done by Sofiia Tsepotan 
 
-// Read
+// Get (Read)
 app.get("/showClassrooms", (req, res) => {
     dbase.collection("classrooms")
         .find({})
@@ -38,7 +36,64 @@ app.get("/showClassrooms", (req, res) => {
         });
 });
 
-// Post
+app.get("/getClassroom", (req, res) => {
+    dbase.collection("classrooms").findOne({
+        classroomId: req.query.classroomId,
+        campus: req.query.campus
+    })
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json(err));
+});
+
+
+// Post (Create)
+app.post("/addClassroom", multer().none(), (req, res) => {
+
+    dbase.collection("classrooms").insertOne({
+        classroomId: req.body.classroomId,
+        name: req.body.name,
+        capacity: req.body.capacity,
+        campus: req.body.campus,
+        building: req.body.building,
+        floor: req.body.floor,
+        availability: req.body.availability
+    });
+
+    res.json("One record has been added!");
+
+
+});
+
+
+// PUT (Update)
+app.put("/updateClassroom", multer().none(), (req, res) => {
+  dbase.collection("classrooms").updateOne(
+        { classroomId: req.body.classroomId, campus: req.body.campus },
+        {
+            $set: {
+                name: req.body.name,
+                capacity: req.body.capacity,
+                building: req.body.building,
+                floor: req.body.floor,
+                availability: req.body.availability
+            }
+        }
+    );
+
+
+    res.json("One record has been Updated");
+})
+
+
+
+// Delete 
+app.delete("/deleteClassroom", (req, res) => {
+    dbase.collection("classrooms").deleteOne({
+        classroomId: req.query.classroomId,
+        campus: req.query.campus
+    })
+    res.json("Classroom has been deleted!")
+})
 
 
 
