@@ -19,59 +19,67 @@ app.listen(3000, () => {
 })
 
 // Courses CRUD
-// GET all courses
+// Get (Read) all courses
 app.get("/showCourses", (req, res) => {
     dbase.collection("courses")
         .find({})
         .toArray((err, data) => {
-            if (err) res.json({ error: err });
-            else res.json(data);
+            if (err) throw err;
+            res.json(data);
         });
 });
 
-// CREATE new course
+// Get (Read) a single course by courseId
+app.get("/getCourse", (req, res) => {
+    dbase.collection("courses").findOne({
+        courseId: req.query.courseId
+    })
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json(err));
+});
+
+// Post (Create)
 app.post("/addCourse", multer().none(), (req, res) => {
     dbase.collection("courses").insertOne({
         courseId: req.body.courseId,
-        courseName: req.body.courseName,
+        name: req.body.name,
         description: req.body.description,
-        credits: req.body.credits,
-        instructor: req.body.instructor
-    }, (err, result) => {
-        if (err) res.json({ error: err });
-        else res.json("Course added successfully!");
+        instructor: req.body.instructor,
+        credits: req.body.credits
     });
+
+    // Uncomment if you want a success message
+    // res.json("One course has been added!");
 });
 
-// UPDATE course
+// PUT (Update)
 app.put("/updateCourse", multer().none(), (req, res) => {
     dbase.collection("courses").updateOne(
         { courseId: req.body.courseId },
         {
             $set: {
-                courseName: req.body.courseName,
+                name: req.body.name,
                 description: req.body.description,
-                credits: req.body.credits,
-                instructor: req.body.instructor
+                instructor: req.body.instructor,
+                credits: req.body.credits
             }
-        },
-        (err, result) => {
-            if (err) res.json({ error: err });
-            else res.json("Course updated successfully!");
         }
     );
+
+    // Uncomment if you want a success message
+    // res.json("Course has been updated!");
 });
 
-// DELETE course
+// Delete
 app.delete("/deleteCourse", (req, res) => {
-    dbase.collection("courses").deleteOne(
-        { courseId: req.query.courseId },
-        (err, result) => {
-            if (err) res.json({ error: err });
-            else res.json("Course deleted successfully!");
-        }
-    );
+    dbase.collection("courses").deleteOne({
+        courseId: req.query.courseId
+    });
+
+    // Uncomment if you want a success message
+    // res.json("Course has been deleted!");
 });
+
 
 // Students CRUD
 app.get("/showRecords", (req, res) => {
@@ -136,86 +144,7 @@ app.post("/updateRecord", (req, res) => {
   );
 });
 
-// Instructors CRUD done By Himmat
-
-// GET all instructors
-app.get("/showInstructors", (req, res) => {
-  dbase.collection("instructors")
-    .find({})
-    .toArray((err, data) => {
-      if (err) {
-        res.status(500).json({ error: err });
-      } else {
-        res.json(data);
-      }
-    });
-});
-
-// GET one instructor by instructorId
-app.get("/getInstructor", (req, res) => {
-  dbase.collection("instructors")
-    .findOne({ instructorId: req.query.instructorId })
-    .then(data => res.json(data))
-    .catch(err => res.status(500).json({ error: err }));
-});
-
-// ADD instructor
-app.post("/addInstructor", multer().none(), (req, res) => {
-  dbase.collection("instructors").insertOne(
-    {
-      instructorId: req.body.instructorId,
-      name: req.body.name,
-      department: req.body.department,
-      email: req.body.email,
-      phone: req.body.phone,
-      active: req.body.active, 
-    },
-    (err, result) => {
-      if (err) {
-        res.status(500).json({ error: err });
-      } else {
-        res.json("Instructor added successfully!");
-      }
-    }
-  );
-});
-
-// UPDATE instructor
-app.put("/updateInstructor", multer().none(), (req, res) => {
-  dbase.collection("instructors").updateOne(
-    { instructorId: req.body.instructorId },
-    {
-      $set: {
-        name: req.body.name,
-        department: req.body.department,
-        email: req.body.email,
-        phone: req.body.phone,
-        active: req.body.active,
-      },
-    },
-    (err, result) => {
-      if (err) {
-        res.status(500).json({ error: err });
-      } else {
-        res.json("Instructor updated successfully!");
-      }
-    }
-  );
-});
-
-// DELETE instructor
-app.delete("/deleteInstructor", (req, res) => {
-  dbase.collection("instructors").deleteOne(
-    { instructorId: req.query.instructorId },
-    (err, result) => {
-      if (err) {
-        res.status(500).json({ error: err });
-      } else {
-        res.json("Instructor deleted successfully!");
-      }
-    }
-  );
-});
+// Instructors CRUD
 
 // Classrooms CRUD done by Sofiia Tsepotan 
 
