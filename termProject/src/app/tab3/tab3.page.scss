@@ -1,0 +1,21 @@
+ion-list {
+  border-radius: 25px;
+}
+
+.rounded-modal::part(content) {
+  border-radius: 20px;    
+  overflow: hidden;       
+}
+
+.rounded-modal::part(backdrop) {
+  backdrop-filter: blur(2px); 
+}
+
+.instructor-row {
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.instructor-row ion-col {
+  padding: 2px 4px;
+}
