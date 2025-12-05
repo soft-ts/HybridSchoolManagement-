@@ -19,6 +19,64 @@ app.listen(3000, () => {
 })
 
 // Courses CRUD
+// Get (Read) all courses
+app.get("/showCourses", (req, res) => {
+    dbase.collection("courses")
+        .find({})
+        .toArray((err, data) => {
+            if (err) throw err;
+            res.json(data);
+        });
+});
+
+// Get (Read) a single course by courseId
+app.get("/getCourse", (req, res) => {
+    dbase.collection("courses").findOne({
+        courseId: req.query.courseId
+    })
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json(err));
+});
+
+// Post (Create)
+app.post("/addCourse", multer().none(), (req, res) => {
+    dbase.collection("courses").insertOne({
+        courseId: req.body.courseId,
+        name: req.body.name,
+        description: req.body.description,
+        instructor: req.body.instructor,
+        credits: req.body.credits
+    });
+
+    // res.json("One course has been added!");
+});
+
+// PUT (Update)
+app.put("/updateCourse", multer().none(), (req, res) => {
+    dbase.collection("courses").updateOne(
+        { courseId: req.body.courseId },
+        {
+            $set: {
+                name: req.body.name,
+                description: req.body.description,
+                instructor: req.body.instructor,
+                credits: req.body.credits
+            }
+        }
+    );
+
+    // res.json("Course has been updated!");
+});
+
+// Delete
+app.delete("/deleteCourse", (req, res) => {
+    dbase.collection("courses").deleteOne({
+        courseId: req.query.courseId
+    });
+
+    // res.json("Course has been deleted!");
+});
+
 
 // Students CRUD
 app.get("/showRecords", (req, res) => {
