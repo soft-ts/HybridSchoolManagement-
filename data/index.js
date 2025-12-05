@@ -80,6 +80,69 @@ app.delete("/deleteCourse", (req, res) => {
     // res.json("Course has been deleted!");
 });
 
+
+// Students CRUD
+app.get("/showRecords", (req, res) => {
+  dbase.collection("students")
+    .find({})
+    .toArray((err, data) => {
+      if (err) res.json({ error: err });
+      else res.json(data);
+    });
+});
+
+
+app.post("/addRecord", (req, res) => {
+  dbase.collection("students").insertOne(
+    {
+      id: req.body.id,
+      lastName: req.body.lastName,
+      firstName: req.body.firstName,
+      course: req.body.course,
+      gpa: req.body.gpa
+    },
+    (err, result) => {
+      if (err) {
+        res.json({ error: err })}
+      else 
+        {res.json("Student added successfully!")};
+    }
+  );
+});
+
+
+app.post("/deleteRecord", (req, res) => {
+  dbase.collection("students").deleteOne(
+    { id: req.body.id },
+    (err, result) => {
+      if (err) 
+        {res.json({ error: err })}
+      else
+        { res.json("Student deleted successfully!")};
+    }
+  );
+});
+
+
+app.post("/updateRecord", (req, res) => {
+  dbase.collection("students").updateOne(
+    { id: req.body.id },
+    {
+      $set: {
+        lastName: req.body.lastName,
+        firstName: req.body.firstName,
+        course: req.body.course,
+        gpa: req.body.gpa
+      }
+    },
+    (err, result) => {
+      if (err)
+        { res.json({ error: err })}
+      else
+        { res.json("Student updated successfully!")};
+    }
+  );
+});
 // Instructors CRUD
 
 // Classrooms CRUD done by Sofiia Tsepotan 
