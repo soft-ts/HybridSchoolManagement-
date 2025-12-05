@@ -4,12 +4,12 @@ import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
-  selector: 'app-tab4',
-  templateUrl: './tab4.page.html',
-  styleUrls: ['./tab4.page.scss'],
+  selector: 'app-tab1',
+  templateUrl: './tab1.page.html',
+  styleUrls: ['./tab1.page.scss'],
   standalone: false
 })
-export class Tab4Page implements OnInit {
+export class Tab1Page implements OnInit {
 
   @ViewChild(IonModal) modal!: IonModal;
 
