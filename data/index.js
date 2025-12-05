@@ -82,7 +82,7 @@ app.delete("/deleteCourse", (req, res) => {
 
 
 // Students CRUD
-app.get("/showRecords", (req, res) => {
+app.get("/showStudents", (req, res) => {
   dbase.collection("students")
     .find({})
     .toArray((err, data) => {
@@ -92,7 +92,7 @@ app.get("/showRecords", (req, res) => {
 });
 
 
-app.post("/addRecord", (req, res) => {
+app.post("/addStudents", (req, res) => {
   dbase.collection("students").insertOne(
     {
       id: req.body.id,
@@ -111,7 +111,7 @@ app.post("/addRecord", (req, res) => {
 });
 
 
-app.post("/deleteRecord", (req, res) => {
+app.post("/deleteStudents", (req, res) => {
   dbase.collection("students").deleteOne(
     { id: req.body.id },
     (err, result) => {
@@ -124,7 +124,7 @@ app.post("/deleteRecord", (req, res) => {
 });
 
 
-app.post("/updateRecord", (req, res) => {
+app.post("/updateStudents", (req, res) => {
   dbase.collection("students").updateOne(
     { id: req.body.id },
     {
@@ -143,6 +143,7 @@ app.post("/updateRecord", (req, res) => {
     }
   );
 });
+
 
 // Instructors CRUD
 // Instructors CRUD done By Himmat
