@@ -145,6 +145,86 @@ app.post("/updateRecord", (req, res) => {
 });
 
 // Instructors CRUD
+// Instructors CRUD done By Himmat
+
+// GET all instructors
+app.get("/showInstructors", (req, res) => {
+  dbase.collection("instructors")
+    .find({})
+    .toArray((err, data) => {
+      if (err) {
+        res.status(500).json({ error: err });
+      } else {
+        res.json(data);
+      }
+    });
+});
+
+// GET one instructor by instructorId
+app.get("/getInstructor", (req, res) => {
+  dbase.collection("instructors")
+    .findOne({ instructorId: req.query.instructorId })
+    .then(data => res.json(data))
+    .catch(err => res.status(500).json({ error: err }));
+});
+
+// ADD instructor
+app.post("/addInstructor", multer().none(), (req, res) => {
+  dbase.collection("instructors").insertOne(
+    {
+      instructorId: req.body.instructorId,
+      name: req.body.name,
+      department: req.body.department,
+      email: req.body.email,
+      phone: req.body.phone,
+      active: req.body.active, 
+    },
+    (err, result) => {
+      if (err) {
+        res.status(500).json({ error: err });
+      } else {
+        res.json("Instructor added successfully!");
+      }
+    }
+  );
+});
+
+// UPDATE instructor
+app.put("/updateInstructor", multer().none(), (req, res) => {
+  dbase.collection("instructors").updateOne(
+    { instructorId: req.body.instructorId },
+    {
+      $set: {
+        name: req.body.name,
+        department: req.body.department,
+        email: req.body.email,
+        phone: req.body.phone,
+        active: req.body.active,
+      },
+    },
+    (err, result) => {
+      if (err) {
+        res.status(500).json({ error: err });
+      } else {
+        res.json("Instructor updated successfully!");
+      }
+    }
+  );
+});
+
+// DELETE instructor
+app.delete("/deleteInstructor", (req, res) => {
+  dbase.collection("instructors").deleteOne(
+    { instructorId: req.query.instructorId },
+    (err, result) => {
+      if (err) {
+        res.status(500).json({ error: err });
+      } else {
+        res.json("Instructor deleted successfully!");
+      }
+    }
+  );
+});
 
 // Classrooms CRUD done by Sofiia Tsepotan 
 
