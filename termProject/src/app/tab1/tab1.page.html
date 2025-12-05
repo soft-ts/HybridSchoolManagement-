@@ -1,75 +1,96 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Courses</ion-title>
+    <ion-title>Courses</ion-title> 
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-  <!-- Add/Edit Modal Button -->
-  <div class="ion-padding">
-    <ion-button id="course-modal">Add Course</ion-button>
+<div class="ion-padding">
+  <ion-button id="course-modal">Add Course</ion-button> 
 
-    <ion-modal trigger="course-modal" (willDismiss)="onWillDismiss($event)" class="rounded-modal">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button (click)="cancel()" fill="clear" color="danger">Cancel</ion-button>
-            </ion-buttons>
-            <ion-title>{{ isEditMode ? 'Edit Course' : 'New Course' }}</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="confirm()" strong="true">
-                {{ isEditMode ? 'Save Changes' : 'Confirm' }}
-              </ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
+  <ion-modal trigger="course-modal" (willDismiss)="onWillDismiss($event)" class="rounded-modal"> 
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()" fill="clear" color="danger">Cancel</ion-button>
+          </ion-buttons>
 
-        <ion-content class="ion-padding">
-          <ion-item>
-            <ion-input id="courseId" label="Course ID" labelPlacement="stacked" placeholder="Course ID" [(ngModel)]="course.courseId" required></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input id="name" label="Name" labelPlacement="stacked" placeholder="Course Name" [(ngModel)]="course.name" required></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input id="description" label="Description" labelPlacement="stacked" placeholder="Course Description" [(ngModel)]="course.description"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input id="instructor" label="Instructor" labelPlacement="stacked" placeholder="Instructor Name" [(ngModel)]="course.instructor"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input id="credits" type="number" label="Credits" labelPlacement="stacked" placeholder="Credits" [(ngModel)]="course.credits"></ion-input>
-          </ion-item>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
-  </div>
+          <ion-title>{{ isEditMode ? 'Edit Course' : 'New Course' }}</ion-title> 
 
-  <!-- Courses List -->
-  <div class="ion-padding">
-    <ion-list>
-      <ion-list-header>
-        <ion-label>Course ID</ion-label>
-        <ion-label>Name</ion-label>
-        <ion-label>Instructor</ion-label>
-        <ion-label>Credits</ion-label>
-      </ion-list-header>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" strong="true">
+              {{ isEditMode ? 'Save Changes' : 'Confirm' }}
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
 
-      <ion-item-sliding *ngFor="let c of courses">
+      <ion-content class="ion-padding">
+
+       
+
         <ion-item>
-          <ion-label>{{ c.courseId }}</ion-label>
-          <ion-label>{{ c.name }}</ion-label>
-          <ion-label>{{ c.instructor }}</ion-label>
-          <ion-label>{{ c.credits }}</ion-label>
+          <ion-input id="courseId" label="Course ID" labelPlacement="stacked" placeholder="Course ID" required></ion-input> 
         </ion-item>
-        <ion-item-options side="end">
-          <ion-button color="secondary" (click)="fetchCourse(c.courseId)">Edit</ion-button>
-          <ion-button color="danger" (click)="deleteCourse(c.courseId)">Delete</ion-button>
+
+        <ion-item>
+          <ion-input id="name" label="Course Name" labelPlacement="stacked" placeholder="Course Name" required></ion-input> 
+        </ion-item>
+
+        <ion-item>
+          <ion-input id="description" label="Description" labelPlacement="stacked" placeholder="Course Description"></ion-input> 
+        </ion-item>
+
+        <ion-item>
+          <ion-input id="instructor" label="Instructor" labelPlacement="stacked" placeholder="Instructor Name"></ion-input> 
+        </ion-item>
+
+        <ion-item>
+          <ion-input id="credits" type="number" label="Credits" labelPlacement="stacked" placeholder="Credits"></ion-input> 
+        </ion-item>
+
+       
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</div>
+
+<div class="ion-padding">
+  <ion-list>
+
+    <ion-list-header>
+      @for (col of displayedColumns; track col) {
+        <ion-label>{{ col }}</ion-label>
+      }
+    </ion-list-header>
+
+    @for (course of courses; track course; let index = $index) 
+      <ion-item-sliding>
+
+        <ion-item>
+
+          <ion-label>{{ course.courseId }}</ion-label> 
+          <ion-label>{{ course.name }}</ion-label> 
+          <ion-label>{{ course.description }}</ion-label> 
+          <ion-label>{{ course.instructor }}</ion-label> 
+          <ion-label>{{ course.credits }}</ion-label> 
+
+          
+
+        </ion-item>
+
+        <ion-item-options>
+          <ion-button color="secondary" (click)="fetchCourse(course.courseId)">Edit</ion-button> 
+          <ion-button color="danger" (click)="deleteCourse(course.courseId)">Delete</ion-button> 
         </ion-item-options>
+
       </ion-item-sliding>
-    </ion-list>
-  </div>
+    }
+  </ion-list>
+</div>
 
 </ion-content>
+
