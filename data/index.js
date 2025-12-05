@@ -120,7 +120,7 @@ app.post("/addClassroom", multer().none(), (req, res) => {
         availability: req.body.availability
     });
 
-    res.json("One record has been added!");
+    // res.json("One record has been added!");
 
 
 });
@@ -142,7 +142,7 @@ app.put("/updateClassroom", multer().none(), (req, res) => {
     );
 
 
-    res.json("One record has been Updated");
+    // res.json("One record has been Updated");
 })
 
 
@@ -153,7 +153,7 @@ app.delete("/deleteClassroom", (req, res) => {
         classroomId: req.query.classroomId,
         campus: req.query.campus
     })
-    res.json("Classroom has been deleted!")
+    // res.json("Classroom has been deleted!")
 })
 
 

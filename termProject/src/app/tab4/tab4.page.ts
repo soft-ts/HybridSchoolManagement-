@@ -121,7 +121,9 @@ export class Tab4Page implements OnInit {
     (<HTMLInputElement>document.getElementById("classroomId")).disabled = false;
     (<HTMLInputElement>document.getElementById("campus")).disabled = false;
     this.selectedClassroom = null;
-    this.showClassrooms();
+    if (event.detail.role === 'confirm') {
+      this.showClassrooms();
+    }
   }
   ngOnInit() {
     this.showClassrooms();
