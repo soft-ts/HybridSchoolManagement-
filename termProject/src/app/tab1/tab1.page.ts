@@ -12,10 +12,11 @@ import { OverlayEventDetail } from '@ionic/core/components';
 export class Tab1Page implements OnInit {
 
   @ViewChild(IonModal) modal!: IonModal;
-  courses: any;
+
+  courses: any[] = [];
+  course: any = {}; // Use this for ngModel binding in modal
   apiURL = "http://localhost:3000";
 
-  selectedCourse: any = null;
   isEditMode = false;
 
   displayedColumns: string[] = ['Course ID', 'Name', 'Instructor', 'Credits'];
@@ -28,7 +29,7 @@ export class Tab1Page implements OnInit {
 
   showCourses() {
     this.http.get(this.apiURL + "/showCourses").subscribe(data => {
-      this.courses = data;
+      this.courses = data as any[];
     });
   }
 
@@ -37,61 +38,56 @@ export class Tab1Page implements OnInit {
   }
 
   confirm() {
-    const fields = ["courseId", "name", "description", "instructor", "credits"];
     const formdata = new FormData();
-
-    fields.forEach(id => {
-      const value = (document.getElementById(id) as HTMLInputElement)?.value ?? "";
-      formdata.append(id, value);
-    });
+    formdata.append('courseId', this.course.courseId ?? '');
+    formdata.append('name', this.course.name ?? '');
+    formdata.append('description', this.course.description ?? '');
+    formdata.append('instructor', this.course.instructor ?? '');
+    formdata.append('credits', this.course.credits ?? '');
 
     if (this.isEditMode) {
-      this.http.put(this.apiURL + "/updateCourse", formdata).subscribe(data => {
+      this.http.put(`${this.apiURL}/updateCourse`, formdata).subscribe(() => {
         alert('Course updated successfully!');
+        this.showCourses();
       });
     } else {
-      this.http.post(this.apiURL + "/addCourse", formdata).subscribe(data => {
+      this.http.post(`${this.apiURL}/addCourse`, formdata).subscribe(() => {
         alert('Course added successfully!');
+        this.showCourses();
       });
     }
 
-    this.modal.dismiss(null, "confirm");
+    this.modal.dismiss(null, 'confirm');
   }
 
-  fetchCourse(courseId: any) {
+  fetchCourse(courseId: string) {
     this.isEditMode = true;
 
-    this.http.get(this.apiURL + "/getCourse/?courseId=" + courseId).subscribe((data: any) => {
-      this.selectedCourse = data;
-
-      (<HTMLInputElement>document.getElementById("courseId")).value = this.selectedCourse.courseId;
-      (<HTMLInputElement>document.getElementById("name")).value = this.selectedCourse.name;
-      (<HTMLInputElement>document.getElementById("description")).value = this.selectedCourse.description;
-      (<HTMLInputElement>document.getElementById("instructor")).value = this.selectedCourse.instructor;
-      (<HTMLInputElement>document.getElementById("credits")).value = this.selectedCourse.credits;
-
+    this.http.get(`${this.apiURL}/getCourse/?courseId=${courseId}`).subscribe((data: any) => {
+      this.course = { ...data }; // populate modal form
       // Disable Course ID while editing
-      (<HTMLInputElement>document.getElementById("courseId")).disabled = true;
+      const courseIdInput = document.getElementById("courseId") as HTMLInputElement;
+      if (courseIdInput) courseIdInput.disabled = true;
     });
 
     this.modal.present();
   }
 
-  deleteCourse(courseId: any) {
-    this.http.delete(this.apiURL + "/deleteCourse/?courseId=" + courseId).subscribe(() => {
+  deleteCourse(courseId: string) {
+    this.http.delete(`${this.apiURL}/deleteCourse/?courseId=${courseId}`).subscribe(() => {
       this.showCourses();
     });
   }
 
   onWillDismiss(event: CustomEvent<OverlayEventDetail>) {
     this.isEditMode = false;
-    (<HTMLInputElement>document.getElementById("courseId")).disabled = false;
-    this.selectedCourse = null;
+    const courseIdInput = document.getElementById("courseId") as HTMLInputElement;
+    if (courseIdInput) courseIdInput.disabled = false;
 
+    this.course = {}; // reset form
     if (event.detail.role === 'confirm') {
       this.showCourses();
     }
   }
 
 }
-
