@@ -1,17 +1,66 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Courses Management
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- Add / Update Course Form -->
+  <form (ngSubmit)="saveCourse()" #courseForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Course ID</ion-label>
+      <ion-input type="text" [(ngModel)]="course.courseId" name="courseId" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Course Name</ion-label>
+      <ion-input type="text" [(ngModel)]="course.name" name="name" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-input type="text" [(ngModel)]="course.description" name="description"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Instructor</ion-label>
+      <ion-input type="text" [(ngModel)]="course.instructor" name="instructor"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Credits</ion-label>
+      <ion-input type="number" [(ngModel)]="course.credits" name="credits"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit">
+      {{ isEditing ? 'Update Course' : 'Add Course' }}
+    </ion-button>
+  </form>
+
+  <ion-item-divider>
+    <ion-label>Courses List</ion-label>
+  </ion-item-divider>
+
+  <!-- Courses Table -->
+  <ion-list>
+    <ion-item *ngFor="let c of courses">
+      <ion-label>
+        <h2>{{ c.name }} ({{ c.courseId }})</h2>
+        <p>{{ c.description }}</p>
+        <p>Instructor: {{ c.instructor }}, Credits: {{ c.credits }}</p>
+      </ion-label>
+
+      <ion-button fill="outline" color="primary" (click)="editCourse(c)">
+        Edit
+      </ion-button>
+
+      <ion-button fill="outline" color="danger" (click)="deleteCourse(c.courseId)">
+        Delete
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
 </ion-content>
